@@ -15,7 +15,12 @@
 # [START app]
 import logging
 
+import json
+
 from flask import Flask
+
+import barrios
+import ruta
 
 
 app = Flask(__name__)
@@ -24,7 +29,20 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+
+    app_key = 'AIzaSyBv0RCGswuYS5g52SBUpMvZKCElkfzPdtA'
+
+    nombres_barrios = ['teusaquillo', 'la florida occidental', 'samper mendoza', 'estacion central', 'paloquemao','quinta paredes']
+    serviceurl = 'https://maps.googleapis.com/maps/api/directions/json?origin=Universidad+nacional+de+colombia,Bogota&destination=Centro+comercial+calima,Bogota&alternatives=true&key='
+    url = serviceurl+app_key
+
+
+    js_barrios = barrios.get_barrios_data(nombres_barrios)
+    js_ruta = ruta.get_ruta_data(url, js_barrios,10)
+
+    print (json.dumps(js_ruta, indent=4))
+
+    return json.dumps(js_ruta, indent=4)
 
 
 @app.errorhandler(500)
@@ -41,3 +59,10 @@ if __name__ == '__main__':
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
 # [END app]
+
+
+
+
+
+
+
